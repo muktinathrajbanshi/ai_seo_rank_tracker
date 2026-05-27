@@ -1,5 +1,11 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+// Generate JWT token
+const generateToken = (id) => {
+    return jwt.sign({id}, process.env.JWT_SECRET)
+}
 
 // Register user
 export const register = async (req, res) => {
@@ -17,7 +23,10 @@ export const register = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt(10))
 
-    
+    // Create user
+    const user = await User.create({name, email, password: hashedPassword})
+
+
 
     } catch (error) {
         
