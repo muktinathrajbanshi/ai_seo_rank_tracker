@@ -9,3 +9,7 @@ const userSchema = new mongoose.Schema({
     analysisCount: { type: Number, default: 0 },
     lastAnalysisDate: { type: Date, default: null },
 }, {timestamps: true})
+
+const User = mongoose.model("User", userSchema)
+
+export default User;
