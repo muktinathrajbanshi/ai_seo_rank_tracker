@@ -19,3 +19,5 @@ const auth = async (req, res, next) => {
         return res.status(401).json({ success: false, message: "Not authorized, token failed" })
     }
 }
+
+export default auth;
