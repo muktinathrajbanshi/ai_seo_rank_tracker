@@ -54,22 +54,26 @@ export const register = async (req, res) => {
     // Check password 
     const isMatch = await bcrypt.compare(password, user.password)
     if(!isMatch) {
-        
+        return res.status(200).json({ success: false, message: "Invalid credentials" });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt(10))
-
-    // Create user
-    const user = await User.create({name, email, password: hashedPassword})
-
     const token = generateToken(user._id);
-
     res.status(201).json({success: true, token, user})
-
 
     } catch (error) {
         console.error("Register error:", error.message);
+        res.status(500).json({success: false, message: "Server error"})
+    }
+}
+
+// Get current user
+export const getUser = async (req, res) => {
+    try {
+
+        const user = await User.findById(req.userId)
+
+    } catch (error) {
+        console.error("Get user error:", error.message);
         res.status(500).json({success: false, message: "Server error"})
     }
 }
