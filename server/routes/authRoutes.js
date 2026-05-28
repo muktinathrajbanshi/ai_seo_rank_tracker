@@ -1,6 +1,9 @@
 import express from "express";
-import { register } from "../controllers/authController";
+import { getUser, login, register } from "../controllers/authController";
+import auth from "../middleware/auth";
 
 const authRouter = express.Router();
 
-authRouter.post("/register", register)
+authRouter.post("/register", register);
+authRouter.post("/login", login);
+authRouter.get("/user", auth, getUser)
