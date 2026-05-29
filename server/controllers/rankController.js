@@ -1,3 +1,4 @@
+import keywordTracking from "../models/keywordTracking";
 
 // Add a keyword to track
 export const addKeyword = async (req, res) => {
@@ -14,6 +15,13 @@ export const addKeyword = async (req, res) => {
             domain = urlObj.hostname.replace("www.", "")
         } catch {
             return res.status(400).json({ success: false, message: "Invalid URL format" });
+        }
+
+        // Check if already tracking this keyword+domain 
+        const existing = await keywordTracking.findOne({ userId: req.userId, keyword: keyword.toLowercase().trim(), domain });
+
+        if(existing) {
+            return res.status(400).json({ success: false, message: "Already tracking this keyword for this domain" });
         }
 
     } catch (error) {
