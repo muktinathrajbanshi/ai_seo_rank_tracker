@@ -24,6 +24,15 @@ export const addKeyword = async (req, res) => {
             return res.status(400).json({ success: false, message: "Already tracking this keyword for this domain" });
         }
 
+        // Create tracking entry
+        const tracking = await keywordTracking.create({
+            userId: req.userId,
+            keyword: keyword.toLowercase().trim(),
+            url: url.startsWith("http") ? url : `https://${url}`,
+            domain,
+            status: "checking"
+        })
+
     } catch (error) {
         
     }
