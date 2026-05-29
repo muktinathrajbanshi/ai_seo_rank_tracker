@@ -1,7 +1,24 @@
 
 // Add a keyword to track
 export const addKeyword = async (req, res) => {
-    
+    try {
+        const {keyword, url} = req.body;
+
+        if(!keyword || !url) return res.status(400).json({ success: false,
+             message: "Keyword and URL are required" });
+
+        // Extract domain from URL 
+        let domain;
+        try {
+            const urlObj = new URL(url.startsWith("http") ? url : `https://${url}`);
+            domain = urlObj.hostname.replace("www.", "")
+        } catch {
+            return res.status(400).json({ success: false, message: "Invalid URL format" });
+        }
+
+    } catch (error) {
+        
+    }
 }
 
 // Add a keyword to track
