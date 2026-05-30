@@ -32,7 +32,37 @@ export async function rankTracker(keyword, targetDomain) {
       
       // 3. Search Loop: Iterate through up to 5 pages of Google results
       for (let gPage = 0; gPage < 5; gPage++) {
-        await page.goto()
+        await page.goto(`https://www.google.com/search?q=${encodeURIComponent(keyword)}&start=
+          ${gPage * 10}&num=10&hl=en&gl=us`, {waitUntil: "networkidle"})
+
+      // 4. Page Extraction: Retry up to 3 times if results are missing
+      let pageResults = [];
+      for (let retry = 0; retry < 3; retry++) {
+        try {
+          await page.waitForSelector("h3", { timeout: 8000 });
+          await page.waitForTimeout(1500)
+          pageResults = await page.evaluate(() => Array.from(document.querySelectorAll("h3")).map((h3) => {
+            let a = h3.closest("a");
+            if(!a) {
+              let p = h3.parentElement;
+              for(let j = 0; j < 5 && p; j++, p = p.parentElement) {
+                if(p.tagName === "A") {
+                  a = p;
+                  break;
+                }
+                const sub = p.querySelector("a[href]");
+                if(sub && sub.contains(h3)) {
+                  a = sub;
+                  break;
+                }
+              }
+            }
+            if(!a || !a.href.startsWith("http") || a.href.includes("google.")) return null
+          }))
+        } catch (error) {
+          
+        }
+      }
       }
 
     } catch (error) {
