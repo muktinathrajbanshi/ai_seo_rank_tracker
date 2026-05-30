@@ -40,8 +40,15 @@ export async function keywordTracking(tracking) {
                 const idx = tracking.rankHistory.findIndex((h) => h.date.toDateString() == today.toDateString());
                 if (idx > 0) tracking.rankHistory[idx] = historyEntry;
                 else tracking.rankHistory.push(historyEntry)
+            } else {
+                tracking.status = "failed";
             }
-    } catch (error) {
-        
+            await tracking.save()
+            return result;
+    } catch (err) {
+        console.error("Rank update error:", err.message);
+        tracking.status = "failed";
+        await tracking.save().catch(() => {});
+        return {success: false, error: err.message}
     }
 }

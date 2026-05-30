@@ -1,4 +1,5 @@
-import keywordTracking from "../models/keywordTracking";
+import keywordTracking from "../models/keywordTracking.js";
+import { keywordTracking } from "../services/keywordTrackingService";
 
 // Add a keyword to track
 export const addKeyword = async (req, res) => {
@@ -33,14 +34,25 @@ export const addKeyword = async (req, res) => {
             status: "checking"
         })
 
+        res.status(201).json({ success: true, message: "Keyword tracking started", tracking });
+        keywordTracking(tracking)
+
     } catch (error) {
-        
+        console.error("Add keyword error:", error.message);
+        if (error.code === 11000) return res.status(400).json({ success: false, message: "Already tracking this keyword" });
+        res.status(500).json({ success: false, message: "Server error" });
     }
 }
 
 // Add a keyword to track
 export const getKeywords = async (req, res) => {
-    
+    try {
+        const keywords = (await keywordTracking.find({userId: req.userId})).toSorted({createdAt: -1}).select("-rankHistory")
+    } catch (error) {
+        console.error("Get keywords error:", error.message);
+        res.status(500).json({ success: false, message: "Server error" });
+        
+    }
 }
 
 // Get single keyword with full history
