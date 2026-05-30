@@ -10,6 +10,7 @@ export async function keywordTracking(tracking) {
             if (result.success && result.data.totalResultScanned > 0) break;
             
             if (attempt < 2) await new Promise((r) => setTimeout(r, result.success ? 3000 : 5000))
+        }
 
             if (result.success) {
                 const prev = tracking.currentPosition;
@@ -17,9 +18,26 @@ export async function keywordTracking(tracking) {
                 today.setHours(0, 0, 0, 0);
 
                 tracking.currentPosition = result.data.position;
-            }
+                tracking.currentPage = result.data.page;
+                tracking.competitors = result.data.competitors;
+                tracking.lastChecked = new Date();
+                tracking.status = "completed";
 
-        }
+                // Update stats
+                tracking.positionChange = prev && result.data.position ? prev - result.data.position : 0;
+
+                if (result.data.position && (!tracking.bestPosition || result.data.position < tracking.bestPosition)) {
+                    tracking.bestPosition = result.data.position;
+                }
+                // Update history
+                const historyEntry = {
+                    date: today,
+                    position: result.data.position,
+                    page: result.data.page,
+                    title: result.data.title,
+                    snippet: result.data.snippet,
+                }
+            }
     } catch (error) {
         
     }
