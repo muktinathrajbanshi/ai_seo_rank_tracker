@@ -37,6 +37,9 @@ export async function keywordTracking(tracking) {
                     title: result.data.title,
                     snippet: result.data.snippet,
                 }
+                const idx = tracking.rankHistory.findIndex((h) => h.date.toDateString() == today.toDateString());
+                if (idx > 0) tracking.rankHistory[idx] = historyEntry;
+                else tracking.rankHistory.push(historyEntry)
             }
     } catch (error) {
         
