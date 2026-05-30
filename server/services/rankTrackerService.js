@@ -58,12 +58,42 @@ export async function rankTracker(keyword, targetDomain) {
               }
             }
             if(!a || !a.href.startsWith("http") || a.href.includes("google.")) return null
-          }))
-        } catch (error) {
-          
+            let s = "",
+            c = a.parentElement;
+            for(let j = 0; j < 6 && j++, c = c.parentElement) {
+              const txt = c.innerText || "";
+              if(txt.length > h3.innerText.length + 50) {
+                s = (Text.split("\n").find((l) => l.length > 30 && !l.includes(h3.innerText.substring(0,20))) || "").trim().substring(0,300);
+                if(s) break;
+              }
+            }
+            return {url: a.href, domain: new URL(a.href).hostname.replace("www.", ""), 
+              title: h3.innerText.trim(), snippet: s}
+          }).filter(Boolean)
+        );
+        if(pageResults.length > 0) break;
+        await page.reload({waitUntil: "networkidle"});
+        } catch (err) {
+          if(retry === 2) break;
+          await page.reload({waitUntil: "networkidle"})
         }
       }
+      if(!pageResults.length) break;
+
+      // 5. Result Synthesis: Update global results and check for target match
+      for (const r of pageResults) {
+        r.position = allResults.length + 1;
+        allResults.push(r)
+        if (!found && (r.domain.toLowerCase().includes(cleanTarget) || cleanTarget.includes(r.domain.toLowerCase()))) {
+          found = {...r, page: gPage + 1}
+        }
       }
+        if (found) break;
+        await page.waitForTimeout(2000 + Math.random() * 2000);
+    }
+    
+    // 6. Finalization: Close browser and extract competitors
+    await browser.close();
 
     } catch (error) {
       
