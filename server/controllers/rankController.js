@@ -47,7 +47,7 @@ export const addKeyword = async (req, res) => {
 // Get all tracked keywords for user
 export const getKeywords = async (req, res) => {
     try {
-        const keywords = await KeywordTracking.find({userId: req.userId}).toSorted({createdAt: -1}).select("-rankHistory")
+        const keywords = await KeywordTracking.find({userId: req.userId}).sort({createdAt: -1}).select("-rankHistory")
         res.json({ success: true, keywords })
     } catch (error) {
         console.error("Get keywords error:", error.message);
