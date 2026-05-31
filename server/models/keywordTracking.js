@@ -4,7 +4,7 @@ const rankEntrySchema = new mongoose.Schema({
     date: { type: Date, required: true },
     position: { type: Number, default: null },
     page: { type: String, default: "" },
-    snipped: { type: String, default: "" }
+    snippet: { type: String, default: "" }
 }, {_id: false})
 
 const competitorSchema = new mongoose.Schema({
@@ -12,14 +12,14 @@ const competitorSchema = new mongoose.Schema({
     url: { type: String, required: true },
     domain: { type: String, required: true },
     title: { type: String, default: "" },
-    snipped: { type: String, default: "" },
+    snippet: { type: String, default: "" },
 }, {_id: false})
 
 const keywordTrackingSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     keyword: { type: String, required: true, trim: true, lowercase: true },
     url: { type: String, required: true, trim: true },
-    domain: { type: Number, default: null },
+    domain: { type: String, default: null },
     currentPage: { type: Number, default: null },
     positionChange: { type: Number, default: 0 },
     rankHistory: [rankEntrySchema],
@@ -32,6 +32,6 @@ const keywordTrackingSchema = new mongoose.Schema({
 
 keywordTrackingSchema.index({userId: 1, keyword: 1, domain: 1}, {unique: true})
 
-const KeywordTracking = mongoose.model("keywordTracking", keywordTrackingSchema)
+const KeywordTracking = mongoose.model("KeywordTracking", keywordTrackingSchema)
 
 export default KeywordTracking;

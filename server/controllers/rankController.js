@@ -61,7 +61,7 @@ export const getKeyword = async (req, res) => {
     try {
         const tracking = await KeywordTracking.findOne({_id: req.params.id, userId: req.userId});
         if (!tracking) return res.status(404).json({ success: false, message: "Keyword tracking not found" });
-        res.json({ success: true, keywords })
+        res.json({ success: true, tracking })
     } catch (error) {
         console.error("Get keyword error:", error.message);
         res.status(500).json({ success: false, message: "Server error" });
