@@ -32,6 +32,6 @@ const keywordTrackingSchema = new mongoose.Schema({
 
 keywordTrackingSchema.index({userId: 1, keyword: 1, domain: 1}, {unique: true})
 
-const keywordTracking = mongoose.model("keywordTracking", keywordTrackingSchema)
+const KeywordTracking = mongoose.model("keywordTracking", keywordTrackingSchema)
 
-export default keywordTracking;
+export default KeywordTracking;
