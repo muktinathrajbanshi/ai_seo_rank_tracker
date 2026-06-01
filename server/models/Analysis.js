@@ -33,5 +33,11 @@ const analysisSchema = new mongoose.Schema({
         h6: { type: Number, default: 0 },
         h1Texts: [String],
     },
+    links: {
+        internal: { type: Number, default: 0 },
+        external: { type: Number, default: 0 },
+        broken: { type: Number, default: 0 },
+        total: { type: Number, default: 0 }
+    }
 
 })
