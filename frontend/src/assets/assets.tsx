@@ -751,14 +751,14 @@ export const dummyRankings = [
                 snippet: "Build placement ready or Job ready project using React JS, MongoDB, Express and Node JS. Step by step MERN Stack project for final year students.Read more",
             },
             {
-                position: 3,
+                position: 2,
                 url: "https://github.com/muktinathrajbanshi",
                 domain: "github.com",
                 title: "Muktinath Tech",
                 snippet: "https://github.com > muktinathtech",
             },
             {
-                position: 5,
+                position: 3,
                 url: "https://github.com/muktinathrajbanshi",
                 domain: "muktinathrajbanshi.com",
                 title: "Muktinath by Mukti | Web Development & Digital ...",
@@ -925,7 +925,7 @@ export const dummyRankings = [
 export const dummyWebsiteRanking = {
     _id: "69dd0cbd0fa79fd71e3b0473",
     userId: "69dcf7cacc98f8daf29ecca3",
-    keyword: "greatstack",
+    keyword: "muktinathtech",
     url: "https://muktinathrajbanshi.com",
     domain: "muktinathrajbanshi.com",
     currentPosition: 2,
