@@ -52,13 +52,15 @@ export default function RankDetail() {
         try {
             const res = await api.get(`/api/rank/${id}`);
             if (res.data.success) {
-                setTimeout(fetchTracking, 3000)
+                if(res.data.tracking.status === "checking") {
+                    setTimeout(fetchTracking, 3000)
+                    setTracking(res.data.tracking)
+                    return;
+                }
                 setTracking(res.data.tracking)
-                return;
             }
-            setTracking(res.data.tracking)
         } catch {
-            
+           // handle by null state 
         }
         setLoading(false)
     };
@@ -66,10 +68,25 @@ export default function RankDetail() {
     const handleRefresh = async () => {
         if (!tracking) return;
         setRefreshing(true);
-        setTimeout(() => {
-            setTracking(dummyWebsiteRanking);
-            setRefreshing(false);
-        }, 1000);
+        try {
+            await api.post(`/api/rank/${tracking._id}/refresh`);
+            setTracking((prev) => (prev ? { ...prev, status: "checking"} : null))
+
+            const pollInterval = setInterval(async () => {
+                try {
+                    const check = await api.get(`/api/rank/${tracking._id}`);
+                    if(check.data.tracking.status !== "checking") {
+                        clearInterval(pollInterval)
+                        setTracking(check.data.tracking)
+                        setRefreshing(false)
+                    }
+                } catch (error: any) {
+                    console.error(error)
+                }
+            })
+        } catch {
+            setRefreshing(false)
+        }
     };
 
     const drawChart = () => {
