@@ -23,5 +23,15 @@ const analysisSchema = new mongoose.Schema({
         viewport: { type: String, default: "" },
         charset: { type: String, default: "" },
     },
-    
+
+    headings: {
+        h1: { type: Number, default: 0 },
+        h2: { type: Number, default: 0 },
+        h3: { type: Number, default: 0 },
+        h4: { type: Number, default: 0 },
+        h5: { type: Number, default: 0 },
+        h6: { type: Number, default: 0 },
+        h1Texts: [String],
+    },
+
 })
