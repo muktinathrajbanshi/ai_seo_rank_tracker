@@ -38,6 +38,22 @@ const analysisSchema = new mongoose.Schema({
         external: { type: Number, default: 0 },
         broken: { type: Number, default: 0 },
         total: { type: Number, default: 0 }
-    }
-
-})
+    },
+    images: {
+        total: { type: Number, default: 0 },
+        missingAlt: { type: Number, default: 0 },
+        withAlt: { type: Number, default: 0 },
+    },
+    keywords: [
+        {
+            word: String,
+            count: Number,
+            density: Number,
+        }
+    ],
+    issues: [],
+    loadTime: { type: Number, default: 0 },
+    pageSize: { type: Number, default: 0 },
+    wordCount: { type: Number, default: 0 },
+    status: { type: String, enum: ["pending", "processing", "completed", "failed"], default: "pending" },
+}, {timestamps: true})
