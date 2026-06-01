@@ -10,5 +10,18 @@ const analysisSchema = new mongoose.Schema({
         performance: { type: Number, default: 0 },
         accessibility: { type: Number, default: 0 },
         bestPractices: { type: Number, default: 0 }
-    }
+    },
+    metaData: {
+        title: { type: String, default: "" },
+        description: { type: String, default: "" },
+        canonical: { type: String, default: "" },
+        robots: { type: String, default: "" },
+        ogTitle: { type: String, default: "" },
+        ogDescription: { type: String, default: "" },
+        ogImage: { type: String, default: "" },
+        twitterCard: { type: String, default: "" },
+        viewport: { type: String, default: "" },
+        charset: { type: String, default: "" },
+    },
+    
 })
