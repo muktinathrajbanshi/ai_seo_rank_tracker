@@ -57,6 +57,35 @@ export async function scrapUrl(url) {
                 h4: document.querySelectorAll("h4").length,
                 h5: document.querySelectorAll("h5").length,
                 h6: document.querySelectorAll("h6").length,
+                h1Texts,
+            };
+
+            const allLinks = Array.from(document.querySelectorAll("a[href]"));
+            const currentHost = window.location.hostname;
+            let internalLinks = 0;
+            let externalLinks = 0;
+            allLinks.forEach((link) => {
+                try {
+                    const href = link.href;
+                    if(href.startsWith("mailto:") || href.startsWith("tel:")) return;
+                    const linkUrl = new URL(href);
+                    if(linkUrl.hostname === currentHost) internalLinks++;
+                    else externalLinks++
+                } catch (error) {
+                    
+                }
+            })
+            const allImages = Array.from(document.querySelectorAll("img"));
+            const missingAlt = allImages.filter((img) => !img.alt || img.alt.trim() === "").length;
+            
+            const bodyText = document.body?.innerText || "",
+            const wordCount = bodyText.split(/\s+/).filter((w) => w.length > 0).length;
+            const pageSize = document.documentElement.outerHTML.length;
+
+            return {
+                metaData: { title, description, canonical, robots, ogTitle, ogDescription, ogImage, twitterCard, viewport, charset },
+                headings,
+                links: {internal: internalLinks, external: externalLinks, total: allLinks.length}
             }
         })
     } catch (error) {
