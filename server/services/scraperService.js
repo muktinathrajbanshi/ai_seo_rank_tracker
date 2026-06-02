@@ -46,8 +46,18 @@ export async function scrapUrl(url) {
             const twitterCard = getMeta("twitter:card");
             const viewport = getMeta("viewport");
             const charsetMeta = document.querySelector("meta[charset]");
+            const charset = charsetMeta ? charsetMeta.getAttribute("charset") || "" : "";
 
-
+            const h1Elements = document.querySelectorAll("h1");
+            const h1Texts = Array.from(h1Elements).map((el) => el.textContent?.trim() || "");
+            const headings = {
+                h1: document.querySelectorAll("h1").length,
+                h2: document.querySelectorAll("h2").length,
+                h3: document.querySelectorAll("h3").length,
+                h4: document.querySelectorAll("h4").length,
+                h5: document.querySelectorAll("h5").length,
+                h6: document.querySelectorAll("h6").length,
+            }
         })
     } catch (error) {
         
