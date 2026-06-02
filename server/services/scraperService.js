@@ -6,7 +6,7 @@ const bb = new Browserbase({
 });
 
 
-export async function scrapUrl(url) {
+export async function scrapeUrl(url) {
     let browser;
     try {
         const session = await bb.sessions.create({browserSettings: {blockAds: true}});
@@ -85,10 +85,32 @@ export async function scrapUrl(url) {
             return {
                 metaData: { title, description, canonical, robots, ogTitle, ogDescription, ogImage, twitterCard, viewport, charset },
                 headings,
-                links: {internal: internalLinks, external: externalLinks, total: allLinks.length}
+                links: {internal: internalLinks, external: externalLinks, total: allLinks.length},
+                images: {total: allImages.length, missingAlt, withAlt: allImages.length - missingAlt},
+                wordCount,
+                pageSize,
+                bodyText: bodyText.substring(0, 3000),
             }
         })
+
+        const statusCode = response?.status() || 0;
+        await page.close();
+        await browser.close();
+
+        return {
+            success: true,
+            data: {...scrapedData, loadTime, statusCode, url}
+        }
     } catch (error) {
+        console.error("[SCRAPER] Playwright session failed:", error.message);
+        if(browser){
+            try {
+                await browser.close()
+            } catch (error) {
+                console.error("[SCRAPER] Browser close failed:", error.message);
+                
+            }
+        }
         
     }
 }

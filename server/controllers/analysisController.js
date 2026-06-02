@@ -16,7 +16,19 @@ export const analyzeUrl = async (req, res) => {
         }
 
         // Create analysis record with pending status 
-        const analysis = await Analysis
+        const analysis = await Analysis.create({userId: req.userId, url: validUrl.href,
+            status: processing});
+
+        // Send immediate response with analysis ID 
+        res.json({ success: true, message: "Analysis started", analysisId: analysis._id })
+
+        // Run scraping and analysis in background 
+        try {
+            // Step 1: Scrape the URL with BrowserBase 
+            const scrapeResult = await scrapUrl
+        } catch (error) {
+            
+        }
 
     } catch (error) {
         
