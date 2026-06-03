@@ -58,9 +58,14 @@ const analysisSchema = new mongoose.Schema({
             density: Number,
         }
     ],
-    issues: [],
+    issues: [issueSchema],
     loadTime: { type: Number, default: 0 },
     pageSize: { type: Number, default: 0 },
     wordCount: { type: Number, default: 0 },
     status: { type: String, enum: ["pending", "processing", "completed", "failed"], default: "pending" },
 }, {timestamps: true})
+
+const Analysis = mongoose.model("Analysis", analysisSchema)
+
+
+export default Analysis;

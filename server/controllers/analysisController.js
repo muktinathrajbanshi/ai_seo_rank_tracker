@@ -1,4 +1,5 @@
 import Analysis from "../models/Analysis.js";
+import { scrapeUrl } from "../services/scraperService.js";
 
 // Analyze a URL 
 export const analyzeUrl = async (req, res) => {
@@ -25,12 +26,30 @@ export const analyzeUrl = async (req, res) => {
         // Run scraping and analysis in background 
         try {
             // Step 1: Scrape the URL with BrowserBase 
-            const scrapeResult = await scrapUrl
-        } catch (error) {
-            
-        }
+            const scrapeResult = await scrapeUrl(validUrl.href)
 
+            if(!scrapeResult.success) {
+                analysis.status = "failed";
+                await analysis.save();
+                return;
+            }
+
+            // Step 2: Analyze with Gemini AI 
+        } catch (bgeError) {
+            console.error("Background analysis error:", bgeError.message);
+            try {
+                analysis.status = "failed";
+                await analysis.save()
+            } catch (saveError) {
+             console.error("Failed to save failed status:", saveError.message);   
+            }
+        }
+        
     } catch (error) {
+        console.error("Analyze URL error:", error.message);
+        if(!res.headersSent) {
+            res.status(500).json({success: false, message: "Server error"})
+        }
         
     }
 }
