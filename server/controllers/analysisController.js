@@ -106,7 +106,7 @@ export const getAnalyses = async (req, res) => {
 
         const analyses = await (await Analysis
             .find({userId: req.userId}))
-            .toSorted({createdAt: -1})
+            .sort({createdAt: -1})
             .skip(skip)
             .limit(limit)
             .select("-issues -keywords");
@@ -126,5 +126,13 @@ export const getAnalyses = async (req, res) => {
 
 // Delete analysis
 export const deleteAnalysis = async (req, res) => {
-    
+     try {
+        await Analysis.findByIdAndDelete({_id: req.params.id, userId: req.userId})
+
+        res.json({ success: true, message: "Analysis deleted" });
+
+    } catch (error) {
+        console.error("Delete analysis error:", error.message);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
 }
