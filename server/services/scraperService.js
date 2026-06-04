@@ -12,7 +12,7 @@ export async function scrapeUrl(url) {
       browserSettings: { blockAds: true },
     });
     browser = await chromium.connectOverCDP(session.connectUrl);
-    const defaultContext = browser.contexts([0]);
+    const defaultContext = browser.contexts()[0];
     const page = defaultContext.pages()[0];
     page.setDefaultNavigationTimeout(30000);
 
@@ -33,7 +33,7 @@ export async function scrapeUrl(url) {
     const scrapedData = await page.evaluate(() => {
       const getMeta = (name) => {
         const el =
-          document.querySelector(`meta[name]="${name}"`) ||
+          document.querySelector(`meta[name="${name}"]`) ||
           document.querySelector(`meta[property="${name}"]`);
         return el ? el.getAttribute("content") || "" : "";
       };

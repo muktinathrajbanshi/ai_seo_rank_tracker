@@ -1,60 +1,58 @@
-import { GoogleGenAI, Type } from "@google/genai"
+import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
-
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const seoAnalysisSchema = {
-    type: Type.OBJECT,
-    properties: {
-        overallScore: { type: Type.INTEGER },
-        categories: {
-            type: Type.OBJECT,
-            properties: {
-                seo: { type: Type.INTEGER },
-                performance: { type: Type.INTEGER },
-                accessibility: { type: Type.INTEGER },
-                bestPractices: { type: Type.INTEGER },
-            },
-            required: ["seo", "performance", "accessibility", "bestPractices"],
-        },
-        keywords: {
-            type: Type.ARRAY,
-            items: {
-                type: Type.OBJECT,
-                properties: {
-                    word: { type: Type.STRING },
-                    count: { type: Type.INTEGER },
-                    density: { type: Type.NUMBER },
-                },
-                required: ["word", "count", "density"],
-            },
-        },
-        issues: {
-            type: Type.ARRAY,
-            items: {
-                type: Type.OBJECT,
-                properties: {
-                    severity: {
-                        type: Type.STRING,
-                        format: "enum",
-                        enum: ["critical", "warning", "info"],
-                    },
-
-                    category: { type: Type.STRING },
-                    message: { type: Type.STRING },
-                    recommendation: { type: Type.STRING },
-                },
-                required: ["severity", "category", "message", "recommendation"],
-            },
-        },
+  type: Type.OBJECT,
+  properties: {
+    overallScore: { type: Type.INTEGER },
+    categories: {
+      type: Type.OBJECT,
+      properties: {
+        seo: { type: Type.INTEGER },
+        performance: { type: Type.INTEGER },
+        accessibility: { type: Type.INTEGER },
+        bestPractices: { type: Type.INTEGER },
+      },
+      required: ["seo", "performance", "accessibility", "bestPractices"],
     },
-    required: ["overallScore", "categories", "keywords", "issues"],
+    keywords: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        properties: {
+          word: { type: Type.STRING },
+          count: { type: Type.INTEGER },
+          density: { type: Type.NUMBER },
+        },
+        required: ["word", "count", "density"],
+      },
+    },
+    issues: {
+      type: Type.ARRAY,
+      items: {
+        type: Type.OBJECT,
+        properties: {
+          severity: {
+            type: Type.STRING,
+            format: "enum",
+            enum: ["critical", "warning", "info"],
+          },
+
+          category: { type: Type.STRING },
+          message: { type: Type.STRING },
+          recommendation: { type: Type.STRING },
+        },
+        required: ["severity", "category", "message", "recommendation"],
+      },
+    },
+  },
+  required: ["overallScore", "categories", "keywords", "issues"],
 };
 
-
 export async function analyzeSeoData(scrapedData) {
-    try {
-        const prompt = `You are an expert SEO analyst. Analyze the following website data and provide a comprehensive SEO audit.
+  try {
+    const prompt = `You are an expert SEO analyst. Analyze the following website data and provide a comprehensive SEO audit.
 
     Website URL: ${scrapedData.url}
     Load Time: ${scrapedData.loadTime}ms
@@ -113,20 +111,19 @@ export async function analyzeSeoData(scrapedData) {
     Extract top 10 keywords by frequency from the page content.`;
 
     const response = await ai.models.generateContent({
-        model: "gemma-4-31b-it",
-        contents: [{role: "user", parts: [{text: prompt}]}],
-        config: {
-            responseMimeType: "application/json",
-            responseSchema: seoAnalysisSchema,
-        }
-    })
+      model: "gemma-4-31b-it",
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: seoAnalysisSchema,
+      },
+    });
 
-    const analysis = JSON.parse(response.text)
+    const analysis = JSON.parse(response.text);
 
-    return {success: true, data: analysis}
-
-    } catch (error) {
-        console.error("Gemini analysis error:", error.message);
-        return { success: false, error: error.message };
-    }
+    return { success: true, data: analysis };
+  } catch (error) {
+    console.error("Gemini analysis error:", error.message);
+    return { success: false, error: error.message };
+  }
 }

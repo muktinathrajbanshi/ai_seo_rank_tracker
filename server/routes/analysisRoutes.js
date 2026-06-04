@@ -1,6 +1,11 @@
 import express from "express";
 import auth from "../middleware/auth.js";
-import { analyzeUrl, deleteAnalysis, getAnalyses, getAnalysis } from "../controllers/analysisController.js";
+import {
+  analyzeUrl,
+  deleteAnalysis,
+  getAnalyses,
+  getAnalysis,
+} from "../controllers/analysisController.js";
 
 const analysisRouter = express.Router();
 
