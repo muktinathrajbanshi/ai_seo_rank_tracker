@@ -57,6 +57,14 @@ export default function History() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this analysis?")) return;
     setDeleting(id);
+
+    try {
+      await api.delete(`/api/analysis/${id}`);
+      setAnalyses((prev) => prev.filter((a) => a._id !== id));
+    } catch (err) {
+      console.error("Failed to delete:", err);
+    }
+    setDeleting(null);
   };
 
   const getScoreClass = (s: number) => {
